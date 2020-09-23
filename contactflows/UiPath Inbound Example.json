@@ -1,0 +1,470 @@
+{
+  "modules": [
+    {
+      "id": "4d36a741-bc87-4035-b3fa-9c8390e687ac",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "0ccfeeb0-fdc8-4e3c-8afc-22ed63da076e"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "I'll go lookup your bill, one moment please",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "text"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 158,
+          "y": 22
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "431f29e2-cca7-44e4-a449-90a38c2d327b",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "96f62f74-1905-40cd-acca-714c0782717a"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Something went wrong setting the attribute, please try again later",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "text"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 1018,
+          "y": 162
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "7fc97638-dd77-401e-a979-29592c346dd2",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "96f62f74-1905-40cd-acca-714c0782717a"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Something went wrong collecting the data, please try again later",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "text"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 861,
+          "y": 775
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "16a269f8-8eb3-40de-b85d-f50c507a817f",
+      "type": "InvokeExternalResource",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "06c3910c-6b4f-48b8-9998-55ab1d8b96c1"
+        },
+        {
+          "condition": "Error",
+          "transition": "7fc97638-dd77-401e-a979-29592c346dd2"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "FunctionArn",
+          "value": "##QUERY_JOB_LAMBDA_ARN##",
+          "namespace": null
+        },
+        {
+          "name": "TimeLimit",
+          "value": "7"
+        },
+        {
+          "name": "Parameter",
+          "key": "jobKey",
+          "value": "jobKey",
+          "namespace": "External"
+        },
+        {
+          "name": "Parameter",
+          "key": "folderId",
+          "value": "YOUR_FOLDER_ID_HERE",
+          "namespace": null
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 358,
+          "y": 442
+        },
+        "dynamicMetadata": {
+          "jobKey": true,
+          "folderId": false
+        },
+        "useDynamic": false
+      },
+      "target": "Lambda"
+    },
+    {
+      "id": "14b62da1-1f99-427b-99e9-a09b2862866a",
+      "type": "SetAttributes",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "16a269f8-8eb3-40de-b85d-f50c507a817f"
+        },
+        {
+          "condition": "Error",
+          "transition": "431f29e2-cca7-44e4-a449-90a38c2d327b"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Attribute",
+          "value": "jobKey",
+          "key": "jobKey",
+          "namespace": "External"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 716,
+          "y": 60
+        }
+      }
+    },
+    {
+      "id": "28a6eba0-8bb8-4fb3-bfd1-2126e44d0263",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "96f62f74-1905-40cd-acca-714c0782717a"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Something went wrong running the process, please try again later",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "text"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 721,
+          "y": 253
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "0ccfeeb0-fdc8-4e3c-8afc-22ed63da076e",
+      "type": "SetLoggingBehavior",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "8b54e140-adc8-49cd-8f3f-b19483d910ac"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "LoggingBehavior",
+          "value": "Enable"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 168,
+          "y": 198
+        }
+      }
+    },
+    {
+      "id": "8b54e140-adc8-49cd-8f3f-b19483d910ac",
+      "type": "InvokeExternalResource",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "14b62da1-1f99-427b-99e9-a09b2862866a"
+        },
+        {
+          "condition": "Error",
+          "transition": "28a6eba0-8bb8-4fb3-bfd1-2126e44d0263"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "FunctionArn",
+          "value": "##START_JOB_LAMBDA_ARN##",
+          "namespace": null
+        },
+        {
+          "name": "TimeLimit",
+          "value": "8"
+        },
+        {
+          "name": "Parameter",
+          "key": "releaseKey",
+          "value": "YOUR_RELEASE_KEY_HERE",
+          "namespace": null
+        },
+        {
+          "name": "Parameter",
+          "key": "folderId",
+          "value": "YOUR_FOLDER_ID_HERE",
+          "namespace": null
+        },
+		{
+          "name": "Parameter",
+          "key": "inputArguments",
+          "value": "{ \"expectedDate\": \"5/01/2020\", \"expectedAmount\": \"123\" }",
+          "namespace": null
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 420,
+          "y": 81
+        },
+        "dynamicMetadata": {
+          "releaseKey": false,
+          "folderId": false,
+		      "inputArguments": false
+        },
+        "useDynamic": false
+      },
+      "target": "Lambda"
+    },
+    {
+      "id": "71852d0d-972d-484a-8cce-be1abbf862ec",
+      "type": "Loop",
+      "branches": [
+        {
+          "condition": "Looping",
+          "transition": "16a269f8-8eb3-40de-b85d-f50c507a817f"
+        },
+        {
+          "condition": "Complete",
+          "transition": "7fc97638-dd77-401e-a979-29592c346dd2"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "LoopCount",
+          "value": "3"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 55,
+          "y": 423
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "c44b4634-5f89-4151-8538-cd79d48d6a11",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "739f9ae6-a574-43a5-9772-0a89590cc74c"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "The process is $.External.State",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "text"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 852,
+          "y": 612
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "739f9ae6-a574-43a5-9772-0a89590cc74c",
+      "type": "Wait",
+      "branches": [
+        {
+          "condition": "Timeout",
+          "transition": "71852d0d-972d-484a-8cce-be1abbf862ec"
+        },
+        {
+          "condition": "Error",
+          "transition": "71852d0d-972d-484a-8cce-be1abbf862ec"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "TimeoutSeconds",
+          "value": "3"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 1089,
+          "y": 608
+        },
+        "useDynamic": false,
+        "timeoutUnit": {
+          "display": "Seconds",
+          "value": "second"
+        }
+      }
+    },
+    {
+      "id": "96f62f74-1905-40cd-acca-714c0782717a",
+      "type": "Disconnect",
+      "branches": [],
+      "parameters": [],
+      "metadata": {
+        "position": {
+          "x": 1363,
+          "y": 369
+        }
+      }
+    },
+    {
+      "id": "06c3910c-6b4f-48b8-9998-55ab1d8b96c1",
+      "type": "CheckAttribute",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "Successful",
+          "transition": "6cf20ed3-b56e-4ccf-996e-571a7a3f4262"
+        },
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "Faulted",
+          "transition": "7fc97638-dd77-401e-a979-29592c346dd2"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "c44b4634-5f89-4151-8538-cd79d48d6a11"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Attribute",
+          "value": "State"
+        },
+        {
+          "name": "Namespace",
+          "value": "External"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 600,
+          "y": 440
+        },
+        "conditionMetadata": [
+          {
+            "id": "1adf901c-94bd-4cfe-bc91-8be1955f4f84",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "Successful"
+          },
+          {
+            "id": "b5988f1b-6b16-4e11-8bdd-ee99473a663f",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "Faulted"
+          }
+        ]
+      }
+    },
+    {
+      "id": "6cf20ed3-b56e-4ccf-996e-571a7a3f4262",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "96f62f74-1905-40cd-acca-714c0782717a"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "The latest bill for $.External.OutputArgumentsbillDate was $.External.OutputArgumentsbillTotal.  Thank you for your business, goodbye.",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "text"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 848,
+          "y": 442
+        },
+        "useDynamic": false
+      }
+    }
+  ],
+  "version": "1",
+  "type": "contactFlow",
+  "start": "4d36a741-bc87-4035-b3fa-9c8390e687ac",
+  "metadata": {
+    "entryPointPosition": {
+      "x": 15,
+      "y": 15
+    },
+    "snapToGrid": false,
+    "name": "UiPath Inbound Example",
+    "description": "Leverages UiPath unattended automation to query information about the user from back-end systems.",
+    "type": "contactFlow",
+    "status": "published",
+    "hash": "745e38cbedf087897e42412d45d940316850921c7244a31ed0195fb871c23c46"
+  }
+}
